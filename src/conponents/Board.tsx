@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import Field from './Field';
+import Piece from './Piece';
 
 import type { ChessPiece } from '../App';
 interface BoardType {
@@ -48,6 +49,7 @@ const possibleMoves = {
 const Board: React.FC<BoardType> = ({ gameState }) => {
   // This setting can hide or show the coords for dev purposes
   const isShowingCoords: boolean = false;
+  const fieldSize: number = 80;
 
   // States for holding the selected piece and its possible moves
   const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
@@ -72,30 +74,56 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   };
 
   return (
-    <table className="mx-auto mt-0">
-      <tbody>
-        {gameState.map((row, i) => (
-          <tr key={i}>
-            {row.map((piece, j) => (
-              <td key={j} className="chess-piece">
-                <Field
-                  piece={piece}
-                  isDark={i % 2 === 0 ? j % 2 !== 0 : j % 2 === 0}
-                  coords={[i, j]}
-                  isSelected={selectedPiece.toString() === [i, j].toString()}
-                  handlePieceClick={handlePieceClick}
-                  isHighlighted={possibleCoords.some(
-                    (coord) => coord[0] === i && coord[1] === j
-                  )}
-                  isShowingChords={isShowingCoords}
-                  isMoveable={possibleCoords.length > 0}
-                />
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <>
+      {/* Overlay */}
+      <div 
+        style={{
+          width: `${8 * fieldSize + 8 * 2}px`,
+          height: `${8 * fieldSize + 8 * 2}px`
+        }}
+        className="absolute top-0 mx-auto left-0 right-0 z-10">
+          {gameState.map((row, i) => (
+            <tr key={i}>
+              {row.map((piece, j) => (
+                <td key={j} className="chess-piece">
+                  <Piece 
+                    piece={piece}
+                    coords={[i, j]}
+                    isSelected={selectedPiece.toString() === [i, j].toString()}
+                    handlePieceClick={handlePieceClick}
+                    isHighlighted={possibleCoords.some(
+                      (coord) => coord[0] === i && coord[1] === j
+                    )}
+                    isMoveable={possibleCoords.length > 0}
+                    fieldSize={fieldSize}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+          
+      </div>
+
+      {/* Board */}
+      <table className="mx-auto mt-0">
+        <tbody>
+          {gameState.map((row, i) => (
+            <tr key={i}>
+              {row.map((piece, j) => (
+                <td key={j} className="chess-piece">
+                  <Field
+                    isDark={i % 2 === 0 ? j % 2 !== 0 : j % 2 === 0}
+                    coords={[i, j]}                    
+                    isShowingChords={isShowingCoords}
+                    fieldSize={fieldSize}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
 
