@@ -22,8 +22,11 @@ const Field: React.FC<FieldType> = ({
   isMoveable,
 }) => {
 
+  // This handler sets the clicked pieces coords, if there is one
+  // and removes selection, if we click on an empty field
   const clickHandler = () => {
     handlePieceClick(piece ? coords : []);
+    // Here should we add the method for moving the piece
     isHighlighted && console.log(`Move piece here: ${coords}`);
   }
   
