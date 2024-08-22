@@ -88,6 +88,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
                     (coord) => coord[0] === i && coord[1] === j
                   )}
                   isShowingChords={isShowingCoords}
+                  isMoveable={possibleCoords.length > 0}
                 />
               </td>
             ))}
