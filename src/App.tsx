@@ -6,8 +6,11 @@ export type ChessBoardState = {
   state: ChessPiece[][]
 }
 
+// Use these chars instead of the names of the figures
 export type ChessPiece = "♔" | "♕" | "♖" | "♗" | "♘" | "♙" | "♚" | "♛" | "♜" | "♝" | "♞" | "♟" | null;
 
+// This object represents the current state of the board
+// that we recieve from the api
 const chessBoard: ChessBoardState = {
   state: [
     ["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"],
