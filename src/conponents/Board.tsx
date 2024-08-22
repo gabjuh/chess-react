@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Field from './Field';
 
@@ -7,8 +7,8 @@ interface BoardType {
   gameState: ChessPiece[][]
 }
 
-// This object represents the object could we recieve from the api
-// for this very first state of the figures
+// This object represents the object of possible moves could we 
+// recieve from the api for this very first state of the figures
 const possibleMoves = {
   '0,0': [],
   '0,1': [[2,0], [2,2]],
@@ -46,15 +46,25 @@ const possibleMoves = {
 }
 
 const Board: React.FC<BoardType> = ({ gameState }) => {
-  const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
-  const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
+  // This setting can hide or show the coords for dev purposes
   const isShowingCoords: boolean = false;
 
+  // States for holding the selected piece and its possible moves
+  const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
+  const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
+
+  // This helper methode gets the possible moves from our object,
+  // it can be replaced with the correct fetching methode for
+  // getting the possible moves only for the clicked piece
   const getPossibleMoves = (pieceCoords: number[]): number[][] => {
+    // Because the key is a string version of the coordinate like
+    // '0,0', we have to create first this string key:
     const key = `${pieceCoords[0]},${pieceCoords[1]}` as keyof typeof possibleMoves;
+    // Than if there is a possible way, we return it, if not than an empty array.
     return possibleMoves[key] ?? [];
   };
 
+  // This methode sets the selectedPiece and possibleCords states
   const handlePieceClick = (coords: number[]) => {
     const newSelectedPiece = selectedPiece.toString() === coords.toString() ? [] : coords;
     setSelectedPiece(newSelectedPiece);
