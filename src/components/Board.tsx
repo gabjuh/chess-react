@@ -10,44 +10,6 @@ interface BoardType {
   gameState: ChessPiece[][]
 }
 
-// This object represents the object of possible moves could we 
-// recieve from the api for this very first state of the figures
-const possibleMoves = {
-  '0,0': [],
-  '0,1': [[2,0], [2,2]],
-  '0,2': [],
-  '0,3': [],
-  '0,4': [],
-  '0,5': [],
-  '0,6': [[2,5], [2,7]],
-  '0,7': [],
-  '1,0': [[2,0], [3,0]],
-  '1,1': [[2,1], [3,1]],
-  '1,2': [[2,2], [3,2]],
-  '1,3': [[2,3], [3,3]],
-  '1,4': [[2,4], [3,4]],
-  '1,5': [[2,5], [3,5]],
-  '1,6': [[2,6], [3,6]],
-  '1,7': [[2,7], [3,7]],
-  '6,0': [[5,0], [4,0]],
-  '6,1': [[5,1], [4,1]],
-  '6,2': [[5,2], [4,2]],
-  '6,3': [[5,3], [4,3]],
-  '6,4': [[5,4], [4,4]],
-  '6,5': [[5,5], [4,5]],
-  '6,6': [[5,6], [4,6]],
-  '6,7': [[5,7], [4,7]],
-  '7,0': [],
-  '7,1': [[5,0], [5,2]],
-  '7,2': [],
-  '7,3': [],
-  '7,4': [],
-  '7,5': [],
-  '7,6': [[5,5], [5,7]],
-  '7,7': [],
-
-}
-
 const Board: React.FC<BoardType> = ({ gameState }) => {
   // This setting can hide or show the coords for dev purposes
   const isShowingCoords: boolean = false;
@@ -58,22 +20,13 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
   const [gameStateFromNodeJsApi, setGameStateFromNodeJsApi] = useState<ChessPieceMaK[][] | undefined>();
 
-  // This helper methode gets the possible moves from our object,
-  // it can be replaced with the correct fetching methode for
-  // getting the possible moves only for the clicked piece
-  const getPossibleMoves = (pieceCoords: number[]): number[][] => {
-    // Because the key is a string version of the coordinate like
-    // '0,0', we have to create first this string key:
-    const key = `${pieceCoords[0]},${pieceCoords[1]}` as keyof typeof possibleMoves;
-    // Than if there is a possible way, we return it, if not than an empty array.
-    return possibleMoves[key] ?? [];
-  };
-
   // This methode sets the selectedPiece and possibleCords states
   const handlePieceClick = (coords: number[]) => {
     const newSelectedPiece = selectedPiece.toString() === coords.toString() ? [] : coords;
     setSelectedPiece(newSelectedPiece);
-    setPossibleCoords(newSelectedPiece.length ? getPossibleMoves(newSelectedPiece) : []);
+    console.log({newSelectedPiece})
+    // setPossibleCoords(newSelectedPiece.length ? getPossibleMoves(newSelectedPiece) : []);
+    setPossibleCoords(newSelectedPiece.length ? possibleCoords ?? [] : []);
   };
 
   const sendSelectedPieceCoords = async () => {
@@ -82,6 +35,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     try {
       const response = await axios.get(`${apiUrl}/api/selectPiece/${selectedPiece[0]}/${selectedPiece[1]}`,);
       console.log('Response:', response.data)
+      console.log({selectedPiece})
       setPossibleCoords(response.data);
     } catch (error) {
       console.error('Error posting data:', error);
@@ -100,9 +54,10 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   }, [])
 
   useEffect(() => {
-    if (selectedPiece[0]) {
-      sendSelectedPieceCoords();
+    if (selectedPiece.length === 0) {
+      return;
     }
+    sendSelectedPieceCoords();
   }, [selectedPiece])
 
   return (
