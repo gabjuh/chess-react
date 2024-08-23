@@ -46,7 +46,7 @@ const Piece: React.FC<Piece> = ({
     if (piece && piece === piece.toUpperCase()) {
       return pieceChars[piece.toLowerCase()][0];
     }
-    
+
     // Lowercase: black
     return pieceChars[piece][1];
   };
@@ -58,7 +58,7 @@ const Piece: React.FC<Piece> = ({
         width: `${fieldSize}px`,
         height: `${fieldSize}px`
       }}
-      className={`select-none border-[0px] border-opacity-0 relative text-white text-center box-border transition-all ease-in-out duration-150 ${piece ? 'cursor-pointer hover:bg-gray-400 hover:bg-opacity-30' : ''}  ${isHighlighted ? 'cursor-pointer before:bg-green-600 before:opacity-30 before:content-[""] before:w-full before:h-full before:block' : ''} `}>
+      className={`select-none border-[0px] border-opacity-0 relative text-white text-center box-border transition-all ease-in-out duration-150 ${piece ? 'cursor-pointer hover:bg-gray-400 hover:bg-opacity-30' : ''}  ${isHighlighted ? 'cursor-pointer bg-green-600 bg-opacity-30 w-full h-full block' : ''} `}>
 
       {/* Overlay for border */}
       <div className={`block absolute transition-all duration-150 ease-in-out ${isSelected ? isMoveable ? 'border-[9px] border-green-400' : 'border-[9px] border-orange-400' : ''} w-full h-full`}></div>
