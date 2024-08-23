@@ -145,7 +145,7 @@ export class Game {
     const possibleMoves: [number, number][] = [];
     let uniqueMoves: [number, number][] = [];
 
-    while (possibleMoves.length < 7) {
+    while (possibleMoves.length < this.generateRandomNumberBetween(0,3)) {
       const randomCoords: [number, number] = [
         this.generateRandomNumberBetween(0, 7),
         this.generateRandomNumberBetween(0, 7),
