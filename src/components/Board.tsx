@@ -98,13 +98,12 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       >
         <tbody>
           {/* {gameStateFromNodeJsApi?.map((row, i) => ( */}
-          {gameState?.map((row, i) => (
+          {gameStateFromNodeJsApi?.map((row, i) => (
             <tr key={i}>
               {row && row.map((piece, j) => (
                 <td key={j} className="chess-piece">
                   <Piece 
-                    // piece={piece?.char}
-                    piece={piece}
+                    piece={piece?.char}
                     coords={[i, j]}
                     isSelected={selectedPiece.toString() === [i, j].toString()}
                     handlePieceClick={handlePieceClick}
