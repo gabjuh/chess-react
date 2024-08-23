@@ -5,7 +5,7 @@ import { getGameState, getMovesForPiece, makeMove } from '../controllers/gameCon
 const router = express.Router();
 
 router.get('/game-state', getGameState);
-router.get('/possible-moves/:row/:col', getMovesForPiece);
-router.post('/move', makeMove);
+router.get('/selectPiece/:row/:col', getMovesForPiece);
+router.post('/movePiece', makeMove);
 
 export default router;

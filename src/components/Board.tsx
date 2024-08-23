@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import { ChessPieceMaK } from '../../backend/src/models/game';
@@ -75,6 +76,18 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     setPossibleCoords(newSelectedPiece.length ? getPossibleMoves(newSelectedPiece) : []);
   };
 
+  const sendSelectedPieceCoords = async () => {
+    const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
+
+    try {
+      const response = await axios.get(`${apiUrl}/api/selectPiece/${selectedPiece[0]}/${selectedPiece[1]}`,);
+      console.log('Response:', response.data)
+      setPossibleCoords(response.data);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  }
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_APP_BACKEND_API_URL}/api/game-state`)
       .then(response => response.json())
@@ -84,7 +97,13 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       .catch(error => {
         console.error(error);
       });
-  })
+  }, [])
+
+  useEffect(() => {
+    if (selectedPiece[0]) {
+      sendSelectedPieceCoords();
+    }
+  }, [selectedPiece])
 
   return (
     <>

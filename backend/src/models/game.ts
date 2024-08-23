@@ -134,9 +134,32 @@ export class Game {
     return board;
   }
 
+
+  private generateRandomNumberBetween(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   getPossibleMoves(piece: string): [number, number][] {
-    // TODO: Implement logic to calculate possible moves
-    return [];
+    const possibleMoves: [number, number][] = [];
+    let uniqueMoves: [number, number][] = [];
+
+    while (possibleMoves.length < 7) {
+      const randomCoords: [number, number] = [
+        this.generateRandomNumberBetween(0, 7),
+        this.generateRandomNumberBetween(0, 7),
+      ];
+
+      possibleMoves.push(randomCoords);
+
+      // Remove duplicates
+      uniqueMoves = possibleMoves.filter(
+        (move, index) => possibleMoves.indexOf(move) === index
+      );
+    }
+
+    return uniqueMoves;
   }
 
   movePiece(from: [number, number], to: [number, number]): boolean {

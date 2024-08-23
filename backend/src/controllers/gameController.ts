@@ -13,6 +13,15 @@ export const getGameState = (req: Request, res: Response) => {
   }
 };
 
+export const getGameStateMaK = (req: Request, res: Response) => {
+  try {
+    const gameState = chessService.getGameState();
+    res.json(gameState);
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+};
+
 export const getMovesForPiece = (req: Request, res: Response) => {
   const { row, col } = req.params;
   try {
