@@ -24,8 +24,6 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   const handlePieceClick = (coords: number[]) => {
     const newSelectedPiece = selectedPiece.toString() === coords.toString() ? [] : coords;
     setSelectedPiece(newSelectedPiece);
-    console.log({newSelectedPiece})
-    // setPossibleCoords(newSelectedPiece.length ? getPossibleMoves(newSelectedPiece) : []);
     setPossibleCoords(newSelectedPiece.length ? possibleCoords ?? [] : []);
   };
 
@@ -35,7 +33,6 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     try {
       const response = await axios.get(`${apiUrl}/api/selectPiece/${selectedPiece[0]}/${selectedPiece[1]}`,);
       console.log('Response:', response.data)
-      console.log({selectedPiece})
       setPossibleCoords(response.data);
     } catch (error) {
       console.error('Error posting data:', error);
