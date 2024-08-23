@@ -9,6 +9,16 @@ type PieceObjWrappedType = {
 export type ChessPieceMaK = 
   'rook' | 'knight' | 'bishop' | 'queen' | 'king' | 'pawn' | 'ROOK' | 'KNIGHT' | 'BISHOP' | 'QUEEN' | 'KING' | 'PAWN' | null;
 
+export type SelectedPieceResponseType = {
+  selectedPiece: {
+    rowPosition: number,
+    colPosition: number,
+    isWhite: boolean,
+  },
+  possibleMoves: number[][],
+  possibleCaptures: number[]
+}
+
 const Pieces: PieceObjWrappedType[] = [
   {
     obj: {
@@ -141,25 +151,18 @@ export class Game {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  getPossibleMoves(piece: string): [number, number][] {
-    const possibleMoves: [number, number][] = [];
-    let uniqueMoves: [number, number][] = [];
+  getPossibleMoves(piece: string): SelectedPieceResponseType {
 
-    while (possibleMoves.length < this.generateRandomNumberBetween(0,3)) {
-      const randomCoords: [number, number] = [
-        this.generateRandomNumberBetween(0, 7),
-        this.generateRandomNumberBetween(0, 7),
-      ];
-
-      possibleMoves.push(randomCoords);
-
-      // Remove duplicates
-      uniqueMoves = possibleMoves.filter(
-        (move, index) => possibleMoves.indexOf(move) === index
-      );
+    const possibleMoves: SelectedPieceResponseType = {
+      selectedPiece: {
+        rowPosition: this.generateRandomNumberBetween(0, 7),
+        colPosition: this.generateRandomNumberBetween(0, 7),
+        isWhite: this.generateRandomNumberBetween(0, 1) ? true : false,
+      },
+      possibleMoves: [[1, 2], [3, 4], [5, 6]],
+      possibleCaptures: []
     }
-
-    return uniqueMoves;
+    return possibleMoves;
   }
 
   movePiece(from: [number, number], to: [number, number]): boolean {

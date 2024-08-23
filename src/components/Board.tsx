@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import { ChessPieceMaK } from '../../backend/src/models/game';
+import { ChessPieceMaK, SelectedPieceResponseType } from '../../backend/src/models/game';
 import Field from './Field';
 import Piece from './Piece';
 
@@ -32,8 +32,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
 
     try {
       const response = await axios.get(`${apiUrl}/api/selectPiece/${selectedPiece[0]}/${selectedPiece[1]}`,);
-      console.log('Response:', response.data)
-      setPossibleCoords(response.data);
+      setPossibleCoords(response.data.possibleMoves);
     } catch (error) {
       console.error('Error posting data:', error);
     }
