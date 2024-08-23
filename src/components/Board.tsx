@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { PieceObjType } from '../../backend/src/models/chessPiece';
 import Field from './Field';
 import Piece from './Piece';
 
@@ -54,6 +55,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   // States for holding the selected piece and its possible moves
   const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
   const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
+  const [gameStateFromNodeJsApi, setGameStateFromNodeJsApi] = useState<PieceObjType[][] | undefined>();
 
   // This helper methode gets the possible moves from our object,
   // it can be replaced with the correct fetching methode for
@@ -73,20 +75,35 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     setPossibleCoords(newSelectedPiece.length ? getPossibleMoves(newSelectedPiece) : []);
   };
 
+  useEffect(() => {
+    fetch('http://localhost:5000/api/game-state')
+      .then(response => response.json())
+      .then(data => {
+        setGameStateFromNodeJsApi(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  })
+
   return (
     <>
       {/* Overlay */}
-      <div 
+      <table 
         style={{
           width: `${8 * fieldSize + 8 * 2}px`,
           height: `${8 * fieldSize + 8 * 2}px`
         }}
-        className="absolute top-0 mx-auto left-0 right-0 z-10">
-          {gameState.map((row, i) => (
+        className="absolute top-0 mx-auto left-0 right-0 z-10"
+      >
+        <tbody>
+          {/* {gameStateFromNodeJsApi?.map((row, i) => ( */}
+          {gameState?.map((row, i) => (
             <tr key={i}>
-              {row.map((piece, j) => (
+              {row && row.map((piece, j) => (
                 <td key={j} className="chess-piece">
                   <Piece 
+                    // piece={piece?.char}
                     piece={piece}
                     coords={[i, j]}
                     isSelected={selectedPiece.toString() === [i, j].toString()}
@@ -101,8 +118,8 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
               ))}
             </tr>
           ))}
-          
-      </div>
+        </tbody>
+      </table>
 
       {/* Board */}
       <table className="mx-auto mt-0">

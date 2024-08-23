@@ -13,14 +13,14 @@ export type ChessPiece = "♔" | "♕" | "♖" | "♗" | "♘" | "♙" | "♚" |
 // that we recieve from the api
 const chessBoard: ChessBoardState = {
   state: [
-    ["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"],
-    ["♟", "♟", "♟", "♟", "♟", "♟", "♟", "♟"],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    ["♙", "♙", "♙", "♙", "♙", "♙", "♙", "♙"],
     ["♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"],
+    ["♙", "♙", "♙", "♙", "♙", "♙", "♙", "♙"],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, "♟", null, null],
+    ["♟", "♟", "♟", "♟", "♟", null, "♟", "♟"],
+    ["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"],
   ]
 }
 
