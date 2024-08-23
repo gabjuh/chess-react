@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { PieceObjType } from '../../backend/src/models/chessPiece';
+import { ChessPieceMaK } from '../../backend/src/models/game';
 import Field from './Field';
 import Piece from './Piece';
 
@@ -55,7 +55,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   // States for holding the selected piece and its possible moves
   const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
   const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
-  const [gameStateFromNodeJsApi, setGameStateFromNodeJsApi] = useState<PieceObjType[][] | undefined>();
+  const [gameStateFromNodeJsApi, setGameStateFromNodeJsApi] = useState<ChessPieceMaK[][] | undefined>();
 
   // This helper methode gets the possible moves from our object,
   // it can be replaced with the correct fetching methode for
@@ -76,10 +76,10 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/game-state')
+    fetch(`${import.meta.env.VITE_APP_BACKEND_API_URL}/api/game-state`)
       .then(response => response.json())
       .then(data => {
-        setGameStateFromNodeJsApi(data);
+        setGameStateFromNodeJsApi(data.board);
       })
       .catch(error => {
         console.error(error);
@@ -97,13 +97,12 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
         className="absolute top-0 mx-auto left-0 right-0 z-10"
       >
         <tbody>
-          {/* {gameStateFromNodeJsApi?.map((row, i) => ( */}
           {gameStateFromNodeJsApi?.map((row, i) => (
             <tr key={i}>
               {row && row.map((piece, j) => (
                 <td key={j} className="chess-piece">
                   <Piece 
-                    piece={piece?.char}
+                    piece={piece}
                     coords={[i, j]}
                     isSelected={selectedPiece.toString() === [i, j].toString()}
                     handlePieceClick={handlePieceClick}

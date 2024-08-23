@@ -12,7 +12,7 @@ export class ChessService {
   }
 
   getMovesForPiece(row: number, col: number) {
-    const piece = this.game.board[row][col];
+    const piece = this.game.board.board[row][col];
     if (!piece) {
       throw new Error('No piece at the specified location');
     }

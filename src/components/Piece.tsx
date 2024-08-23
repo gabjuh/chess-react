@@ -1,7 +1,7 @@
-import { ChessPiece } from '../App';
+import { ChessPieceMaK } from '../../backend/src/models/game';
 
 interface Piece {
-  piece: ChessPiece;
+  piece: ChessPieceMaK;
   coords: number[];
   isSelected: boolean;
   handlePieceClick: (coords: number[]) => void;
@@ -28,6 +28,29 @@ const Piece: React.FC<Piece> = ({
     isHighlighted && console.log(`Move piece here: ${coords}`);
   }
 
+  const pieceChars: any = {
+    pawn: ["♟", "♙"],
+    rook: ["♜", "♖"],
+    knight: ["♞", "♘"],
+    bishop: ["♝", "♗"],
+    queen: ["♛", "♕"],
+    king: ["♚", "♔"],
+  };
+
+  const getPieceChar = () => {
+    if (!piece) {
+      return;
+    }
+
+    // Uppercase: white
+    if (piece && piece === piece.toUpperCase()) {
+      return pieceChars[piece.toLowerCase()][0];
+    }
+    
+    // Lowercase: black
+    return pieceChars[piece][1];
+  };
+
   return (
     <div 
       onClick={clickHandler}
@@ -41,7 +64,7 @@ const Piece: React.FC<Piece> = ({
       <div className={`block absolute transition-all duration-150 ease-in-out ${isSelected ? isMoveable ? 'border-[9px] border-green-400' : 'border-[9px] border-orange-400' : ''} w-full h-full`}></div>
 
       {/* Piece with transition effects */}
-      <span className={`block transition-all duration-150 ease-in-out ${isSelected && isMoveable  ? 'translate-y-[-4px] scale-[1.15] rotate-[8deg] drop-shadow-[0_5px_5px_rgba(0,0,0,0.6)]' : ''}`}>{piece}</span>
+      <span className={`block transition-all duration-150 ease-in-out ${isSelected && isMoveable  ? 'translate-y-[-4px] scale-[1.15] rotate-[8deg] drop-shadow-[0_5px_5px_rgba(0,0,0,0.6)]' : ''}`}>{getPieceChar()}</span>
 
     </div>
   )
