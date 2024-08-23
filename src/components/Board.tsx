@@ -109,7 +109,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
         <tbody>
           {gameState.map((row, i) => (
             <tr key={i}>
-              {row.map((piece, j) => (
+              {row.map((_, j) => (
                 <td key={j} className="chess-piece">
                   <Field
                     isDark={i % 2 === 0 ? j % 2 !== 0 : j % 2 === 0}

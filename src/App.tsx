@@ -1,6 +1,6 @@
 import './App.css';
 
-import Board from './conponents/Board';
+import Board from './components/Board';
 
 export type ChessBoardState = {
   state: ChessPiece[][]
