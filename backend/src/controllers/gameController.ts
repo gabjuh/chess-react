@@ -34,9 +34,11 @@ export const getMovesForPiece = (req: Request, res: Response) => {
 
 export const makeMove = (req: Request, res: Response) => {
   const { from, to } = req.body;
+  console.log(req.body)
   try {
     const result = chessService.makeMove(from, to);
     res.json({ success: result });
+    console.log(result)
   } catch (error: any) {
     res.status(400).send(error.message);
   }

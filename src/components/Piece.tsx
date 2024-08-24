@@ -1,8 +1,10 @@
+import axios from 'axios';
+
 import { ChessPieceMaK } from '../../backend/src/models/game';
 
 interface Piece {
   piece: ChessPieceMaK;
-  coords: number[];
+  coords: [number, number];
   isSelected: boolean;
   handlePieceClick: (coords: number[]) => void;
   isHighlighted: boolean;
@@ -24,8 +26,7 @@ const Piece: React.FC<Piece> = ({
   // and removes selection, if we click on an empty field
   const clickHandler = () => {
     handlePieceClick(piece ? coords : []);
-    // Here should we add the method for moving the piece
-    isHighlighted && console.log(`Move piece here: ${coords}`);
+    isHighlighted && movePiece(coords);
   }
 
   const pieceChars: any = {
@@ -36,6 +37,16 @@ const Piece: React.FC<Piece> = ({
     queen: ["♛", "♕"],
     king: ["♚", "♔"],
   };
+
+  const movePiece = async (coords: [number, number]) => {
+    const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
+    try {
+      await axios.post(`${apiUrl}/api/movePiece/`, coords );
+      console.log('movepiece', coords);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  }
 
   const getPieceChar = () => {
     if (!piece) {
