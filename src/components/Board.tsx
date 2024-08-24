@@ -38,6 +38,18 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     }
   }
 
+  const movePiece = async (coords: [number, number]) => {
+    const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
+    
+    try {
+      const response = await axios.post(`${apiUrl}/api/movePiece/`, coords );
+      setGameStateFromNodeJsApi(response.data.board)
+      console.log('movepiece', coords);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  }
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_APP_BACKEND_API_URL}/api/game-state`)
       .then(response => response.json())
@@ -55,6 +67,10 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     }
     sendSelectedPieceCoords();
   }, [selectedPiece])
+
+  useEffect(() => {
+    console.log(gameStateFromNodeJsApi)
+  }, [gameStateFromNodeJsApi])
 
   return (
     <>
@@ -81,6 +97,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
                     )}
                     isMoveable={possibleCoords.length > 0}
                     fieldSize={fieldSize}
+                    movePiece={movePiece}
                   />
                 </td>
               ))}

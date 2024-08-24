@@ -32,12 +32,25 @@ export const getMovesForPiece = (req: Request, res: Response) => {
   }
 };
 
+const newState = [
+    ["rook","knight","bishop","queen","king","bishop","knight","rook"],
+    ["pawn","pawn","pawn","pawn","pawn","pawn","pawn","pawn"],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    ["PAWN",null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,"PAWN","PAWN","PAWN","PAWN","PAWN","PAWN","PAWN"],["ROOK","KNIGHT","BISHOP","QUEEN","KING","BISHOP","KNIGHT","ROOK"]
+  ]
+
 export const makeMove = (req: Request, res: Response) => {
   const { from, to } = req.body;
   console.log(req.body)
   try {
     const result = chessService.makeMove(from, to);
-    res.json({ success: result });
+    res.json({ 
+      success: result,
+      board: newState
+    });
     console.log(result)
   } catch (error: any) {
     res.status(400).send(error.message);

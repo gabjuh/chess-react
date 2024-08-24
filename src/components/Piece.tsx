@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { ChessPieceMaK } from '../../backend/src/models/game';
 
 interface Piece {
@@ -10,6 +8,7 @@ interface Piece {
   isHighlighted: boolean;
   isMoveable: boolean;
   fieldSize: number;
+  movePiece: (coords: [number, number]) => void;
 }
 
 const Piece: React.FC<Piece> = ({
@@ -19,7 +18,8 @@ const Piece: React.FC<Piece> = ({
   handlePieceClick,
   isHighlighted,
   isMoveable,
-  fieldSize
+  fieldSize,
+  movePiece
 }) => {
 
   // This handler sets the clicked pieces coords, if there is one
@@ -37,16 +37,6 @@ const Piece: React.FC<Piece> = ({
     queen: ["♛", "♕"],
     king: ["♚", "♔"],
   };
-
-  const movePiece = async (coords: [number, number]) => {
-    const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
-    try {
-      await axios.post(`${apiUrl}/api/movePiece/`, coords );
-      console.log('movepiece', coords);
-    } catch (error) {
-      console.error('Error posting data:', error);
-    }
-  }
 
   const getPieceChar = () => {
     if (!piece) {
