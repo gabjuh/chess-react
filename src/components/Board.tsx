@@ -41,7 +41,8 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   const movePiece = async (coords: [number, number]) => {
     try {
       const response = await axios.post(`${apiUrl}/api/movePiece/`, coords );
-      setGameStateFromNodeJsApi(response.data.board)
+      setGameStateFromNodeJsApi(response.data.board);
+      setPossibleCoords([]);
     } catch (error) {
       console.error('Error posting data:', error);
     }
