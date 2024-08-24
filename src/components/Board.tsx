@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import { ChessPieceMaK, SelectedPieceResponseType } from '../../backend/src/models/game';
+import { ChessPieceMaK } from '../../backend/src/models/game';
 import Field from './Field';
 import Piece from './Piece';
 
@@ -9,6 +9,8 @@ import type { ChessPiece } from '../App';
 interface BoardType {
   gameState: ChessPiece[][]
 }
+const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
+
 
 const Board: React.FC<BoardType> = ({ gameState }) => {
   // This setting can hide or show the coords for dev purposes
@@ -28,8 +30,6 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   };
 
   const sendSelectedPieceCoords = async () => {
-    const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
-
     try {
       const response = await axios.get(`${apiUrl}/api/selectPiece/${selectedPiece[0]}/${selectedPiece[1]}`,);
       setPossibleCoords(response.data.possibleMoves);
@@ -39,19 +39,27 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   }
 
   const movePiece = async (coords: [number, number]) => {
-    const apiUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
-    
     try {
       const response = await axios.post(`${apiUrl}/api/movePiece/`, coords );
       setGameStateFromNodeJsApi(response.data.board)
-      console.log('movepiece', coords);
     } catch (error) {
       console.error('Error posting data:', error);
     }
   }
 
+  const resetHandler = async () => {
+    fetch(`${apiUrl}/api/reset`)
+      .then(response => response.json())
+      .then(data => {
+        setGameStateFromNodeJsApi(data.board);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_APP_BACKEND_API_URL}/api/game-state`)
+    fetch(`${apiUrl}/api/game-state`)
       .then(response => response.json())
       .then(data => {
         setGameStateFromNodeJsApi(data.board);
@@ -69,7 +77,6 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   }, [selectedPiece])
 
   useEffect(() => {
-    console.log(gameStateFromNodeJsApi)
   }, [gameStateFromNodeJsApi])
 
   return (
@@ -125,6 +132,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
           ))}
         </tbody>
       </table>
+      <button className="block mt-4 bg-orange-300 py-3 px-5 rounded-md opacity-75 hover:opacity-100 mx-auto" onClick={resetHandler}>Reset</button>
     </>
   );
 };
