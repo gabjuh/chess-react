@@ -59,7 +59,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   }
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/game-state`)
+    fetch(`${apiUrl}/api/gameState`)
       .then(response => response.json())
       .then(data => {
         setGameStateFromNodeJsApi(data.board);

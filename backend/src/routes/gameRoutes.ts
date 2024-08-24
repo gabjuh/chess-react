@@ -4,7 +4,7 @@ import { getGameState, getMovesForPiece, makeMove, reset } from '../controllers/
 
 const router = express.Router();
 
-router.get('/game-state', getGameState);
+router.get('/gameState', getGameState);
 router.get('/selectPiece/:row/:col', getMovesForPiece);
 router.post('/movePiece', makeMove);
 router.get('/reset', reset);
