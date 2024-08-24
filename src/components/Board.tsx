@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { PieceObjType } from '../../backend/src/models/chessPiece';
 import Field from './Field';
 import Piece from './Piece';
 
 import type { ChessPiece } from '../App';
+import type { PieceObjType } from '../../backend/src/types/types';
 interface BoardType {
   gameState: ChessPiece[][]
 }
@@ -98,12 +98,12 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       >
         <tbody>
           {/* {gameStateFromNodeJsApi?.map((row, i) => ( */}
-          {gameStateFromNodeJsApi?.map((row, i) => (
+          {gameState?.map((row, i) => (
             <tr key={i}>
               {row && row.map((piece, j) => (
                 <td key={j} className="chess-piece">
                   <Piece 
-                    piece={piece?.char}
+                    piece={piece}
                     coords={[i, j]}
                     isSelected={selectedPiece.toString() === [i, j].toString()}
                     handlePieceClick={handlePieceClick}
