@@ -58,7 +58,9 @@ export const makeMove = (req: Request, res: Response) => {
     const result = chessService.makeMove(from, to);
     res.json({ 
       success: result,
-      board: newState
+      board: newState,
+      isGameOver: true,
+      isWhiteWon: true
     });
   } catch (error: any) {
     res.status(400).send(error.message);

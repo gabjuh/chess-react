@@ -27,11 +27,11 @@ const chessBoard: ChessBoardState = {
 function App() {
 
   return (
-    <>
+    <div className="absolute bg-gray-700 h-full w-full">
       <Board 
         gameState={chessBoard.state}
       />
-    </>
+    </div>
   )
 }
 

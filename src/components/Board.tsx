@@ -21,6 +21,10 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
   const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
   const [gameStateFromNodeJsApi, setGameStateFromNodeJsApi] = useState<ChessPieceMaK[][] | undefined>();
+  const [isWhiteTurn, setIsWhiteturn] = useState<boolean>();
+  const [isWhiteWon, setIsWhiteWon] = useState<boolean>();
+  const mePlayerColor = 'white';
+
 
   // This methode sets the selectedPiece and possibleCords states
   const handlePieceClick = (coords: number[]) => {
@@ -43,6 +47,10 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       const response = await axios.post(`${apiUrl}/api/movePiece/`, coords );
       setGameStateFromNodeJsApi(response.data.board);
       setPossibleCoords([]);
+      setIsWhiteturn(response.data.whiteTurn)
+
+      // If the game ends, save isWhiteWon state
+      response.data.isGameOver && setIsWhiteWon(response.data.isWhiteWon)
     } catch (error) {
       console.error('Error posting data:', error);
     }
@@ -53,6 +61,10 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       .then(response => response.json())
       .then(data => {
         setGameStateFromNodeJsApi(data.board);
+        setIsWhiteturn(data.whiteTurn)
+        setIsWhiteWon(undefined);
+        setSelectedPiece([]);
+        setPossibleCoords([]);
       })
       .catch(error => {
         console.error(error);
@@ -64,6 +76,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       .then(response => response.json())
       .then(data => {
         setGameStateFromNodeJsApi(data.board);
+        setIsWhiteturn(data.whiteTurn)
       })
       .catch(error => {
         console.error(error);
@@ -81,14 +94,14 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   }, [gameStateFromNodeJsApi])
 
   return (
-    <>
+    <div className="absolute left-0 right-0 top-[50%] translate-y-[-50%]">
       {/* Overlay */}
       <table 
         style={{
           width: `${8 * fieldSize + 8 * 2}px`,
           height: `${8 * fieldSize + 8 * 2}px`
         }}
-        className="absolute top-0 mx-auto left-0 right-0 z-10"
+        className="absolute mx-auto left-0 right-0 z-10 rounded-xl"
       >
         <tbody>
           {gameStateFromNodeJsApi?.map((row, i) => (
@@ -106,6 +119,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
                     isMoveable={possibleCoords.length > 0}
                     fieldSize={fieldSize}
                     movePiece={movePiece}
+                    mePlayerColor={mePlayerColor}
                   />
                 </td>
               ))}
@@ -134,7 +148,16 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
         </tbody>
       </table>
       <button className="block mt-4 bg-orange-300 py-3 px-5 rounded-md opacity-75 hover:opacity-100 mx-auto" onClick={resetHandler}>Reset</button>
-    </>
+
+      {/* Modal Alert - Won or Lost */}
+      {isWhiteWon !== undefined && 
+        <div className="absolute left-0 right-0 top-[50%] translate-y-[-50%] text-[2rem] text-center bg-gray-600 w-[300px] h-[200px] z-10 mx-auto rounded-3xl  bg-opacity-45 backdrop-blur-lg" >
+        <div className="text-white absolute left-0 right-0 top-[50%] translate-y-[-50%]">
+          YOU {isWhiteWon === true && mePlayerColor === 'white' ? 'WON' : 'LOST'} !
+        </div>
+      </div>
+      }
+    </div>
   );
 };
 

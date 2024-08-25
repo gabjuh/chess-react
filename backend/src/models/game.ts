@@ -63,7 +63,9 @@ const Pieces: PieceObjWrappedType[] = [
 export class Game {
   board: {
     board: ChessPieceMaK[][];
-    whiteTurn: boolean
+    whiteTurn: boolean;
+    isGameOver: boolean;
+    isWhiteWon: boolean;
   };
 
   constructor() {
@@ -98,6 +100,8 @@ export class Game {
         ],
       ],
       whiteTurn: true,
+      isGameOver: false,
+      isWhiteWon: false
     };
   }
 
