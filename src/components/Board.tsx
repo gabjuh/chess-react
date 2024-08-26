@@ -53,6 +53,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
       const response = await axios.post(`${apiUrl}/api/movePiece`, coords);
       // ${coords[0]}/${coords[1]}
       setGameStateFromNodeJsApi(response.data.board);
+      setSelectedPiece([]);
       setPossibleCoords([]);
       setPossibleCaptures([]);
       setIsWhiteturn(response.data.whiteTurn)
