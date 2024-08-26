@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 
 import { ChessPieceMaK } from '../../backend/src/models/game';
 
@@ -15,10 +14,10 @@ interface Piece {
   isSelected: boolean;
   handlePieceClick: (coords: number[]) => void;
   isHighlighted: boolean;
+  isHighlightedCapture: boolean;
   isMoveable: boolean;
   fieldSize: number;
   movePiece: (coords: [number, number]) => void;
-  mePlayerColor: 'black' | 'white';
 }
 
 const Piece: React.FC<Piece> = ({
@@ -27,10 +26,10 @@ const Piece: React.FC<Piece> = ({
   isSelected,
   handlePieceClick,
   isHighlighted,
+  isHighlightedCapture,
   isMoveable,
   fieldSize,
   movePiece,
-  mePlayerColor
 }) => {
 
   const isWhitePiece = getIsWhitePiece(piece);
@@ -43,14 +42,12 @@ const Piece: React.FC<Piece> = ({
       return;
     }
 
-
     if (isWhitePiece) {
       handlePieceClick(piece ? coords : []);
       return;
     }
-    
     isHighlighted && movePiece(coords);
-
+    // isHighlightedCapture && movePiece(coords);
   }
 
   const pieceChars: any = {
@@ -83,7 +80,8 @@ const Piece: React.FC<Piece> = ({
         width: `${fieldSize}px`,
         height: `${fieldSize}px`
       }}
-      className={`select-none border-[0px] border-opacity-0 relative text-white text-center box-border transition-all ease-in-out duration-150 ${piece && isWhitePiece ? 'cursor-pointer hover:bg-gray-400 hover:bg-opacity-30' : ''}  ${isHighlighted ? 'cursor-pointer bg-green-600 bg-opacity-30 w-full h-full block' : ''} `}>
+      className={`select-none border-[0px] border-opacity-0 relative text-white text-center box-border transition-all ease-in-out duration-150 ${piece && isWhitePiece ? 'cursor-pointer hover:bg-gray-200 hover:bg-opacity-30' : ''} ${isHighlighted ? 'cursor-pointer bg-green-600 hover:bg-opacity-50 bg-opacity-30 w-full h-full block' : ''}`}>
+        {/*  ${isHighlightedCapture ? 'cursor-pointer bg-red-400 hover:bg-opacity-50 bg-opacity-30 w-full h-full block' : ''} */}
 
       {/* Overlay for border */}
       <div className={`block absolute transition-all duration-150 ease-in-out ${isSelected ? isMoveable ? 'border-[9px] border-green-400' : 'border-[9px] border-orange-400' : ''} w-full h-full`}></div>

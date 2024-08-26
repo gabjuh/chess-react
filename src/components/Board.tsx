@@ -20,6 +20,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
   // States for holding the selected piece and its possible moves
   const [selectedPiece, setSelectedPiece] = useState<number[]>([]);
   const [possibleCoords, setPossibleCoords] = useState<number[][]>([]);
+  const [possibleCaptures, setPossibleCaptures] = useState<number[][]>([]);
   const [gameStateFromNodeJsApi, setGameStateFromNodeJsApi] = useState<ChessPieceMaK[][] | undefined>();
   const [isWhiteTurn, setIsWhiteturn] = useState<boolean>();
   const [isWhiteWon, setIsWhiteWon] = useState<boolean>();
@@ -31,12 +32,17 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     const newSelectedPiece = selectedPiece.toString() === coords.toString() ? [] : coords;
     setSelectedPiece(newSelectedPiece);
     setPossibleCoords(newSelectedPiece.length ? possibleCoords ?? [] : []);
+    setPossibleCaptures(newSelectedPiece.length ? possibleCaptures ?? [] : []);
   };
 
   const sendSelectedPieceCoords = async () => {
     try {
       const response = await axios.get(`${apiUrl}/api/selectPiece/${selectedPiece[0]}/${selectedPiece[1]}`,);
-      setPossibleCoords(response.data.possibleMoves);
+      let array: [number, number][] = []
+      array = [...response.data.possibleMoves, ...response.data.possibleCaptures];
+      // setPossibleCoords(response.data.possibleMoves);
+      setPossibleCoords(array);
+      setPossibleCaptures(response.data.possibleCaptures);
     } catch (error) {
       console.error('Error posting data:', error);
     }
@@ -44,9 +50,11 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
 
   const movePiece = async (coords: [number, number]) => {
     try {
-      const response = await axios.post(`${apiUrl}/api/movePiece/`, coords );
+      const response = await axios.post(`${apiUrl}/api/movePiece`, coords);
+      // ${coords[0]}/${coords[1]}
       setGameStateFromNodeJsApi(response.data.board);
       setPossibleCoords([]);
+      setPossibleCaptures([]);
       setIsWhiteturn(response.data.whiteTurn)
 
       // If the game ends, save isWhiteWon state
@@ -65,6 +73,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
         setIsWhiteWon(undefined);
         setSelectedPiece([]);
         setPossibleCoords([]);
+        setPossibleCaptures([]);
       })
       .catch(error => {
         console.error(error);
@@ -116,10 +125,12 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
                     isHighlighted={possibleCoords.some(
                       (coord) => coord[0] === i && coord[1] === j
                     )}
+                    isHighlightedCapture={possibleCaptures.some(
+                      (coord) => coord[0] === i && coord[1] === j
+                    )}
                     isMoveable={possibleCoords.length > 0}
                     fieldSize={fieldSize}
                     movePiece={movePiece}
-                    mePlayerColor={mePlayerColor}
                   />
                 </td>
               ))}
