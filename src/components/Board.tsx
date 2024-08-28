@@ -107,10 +107,6 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
     <div className="absolute left-0 right-0 top-[50%] translate-y-[-50%]">
       {/* Overlay */}
       <table 
-        style={{
-          width: `${8 * fieldSize + 8 * 2}px`,
-          height: `${8 * fieldSize + 8 * 2}px`
-        }}
         className="absolute mx-auto left-0 right-0 z-10 rounded-xl"
       >
         <tbody>
@@ -146,7 +142,7 @@ const Board: React.FC<BoardType> = ({ gameState }) => {
           {gameState.map((row, i) => (
             <tr key={i}>
               {row.map((_, j) => (
-                <td key={j} className="chess-piece">
+                <td key={j}>
                   <Field
                     isDark={i % 2 === 0 ? j % 2 !== 0 : j % 2 === 0}
                     coords={[i, j]}                    
